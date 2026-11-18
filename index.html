@@ -1,0 +1,128 @@
+<div class="ktra-cal" id="kc-root">
+<style>
+.ktra-cal,.ktra-cal *{box-sizing:border-box}
+.ktra-cal{font-family:inherit;color:#1F1B3A;max-width:760px;margin:0 auto;padding:16px;background:#fff;border:1px solid #ECE7F6;border-radius:16px;line-height:1.5;font-size:15px}
+.ktra-cal .kc-hd{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:700;color:#2B2A6B;margin:0 0 2px}
+.ktra-cal .kc-tri{width:24px;height:21px;background:linear-gradient(165deg,#EC208C 55%,#A99BD0 55%);clip-path:polygon(50% 0,100% 100%,0 100%);display:inline-block}
+.ktra-cal .kc-sub{font-size:12px;color:#6B668A;margin:0 0 14px}
+.ktra-cal .kc-row2{display:flex;gap:8px;margin:0 0 10px}
+.ktra-cal button{font-family:inherit;cursor:pointer;margin:0}
+.ktra-cal .kc-btn{flex:1;height:40px;padding:0 4px;font-size:13px;border:1px solid #D9D2EE;background:#fff;color:#2B2A6B;border-radius:10px}
+.ktra-cal .kc-tabs .kc-btn.on{background:#2B2A6B;border-color:#2B2A6B;color:#fff;font-weight:700}
+.ktra-cal .kc-fl .kc-btn.on{background:#FDE7F3;border-color:#EC208C;color:#B8126B;font-weight:700}
+.ktra-cal .kc-chips{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin:0 0 12px}
+.ktra-cal .kc-chips button{min-height:46px;padding:5px 0;font-size:12px;line-height:1.3;border:1px solid #D9D2EE;background:#fff;color:#2B2A6B;border-radius:10px}
+.ktra-cal .kc-chips button small{display:block;font-size:11px;color:#6B668A}
+.ktra-cal .kc-chips button.on{background:#EC208C;border-color:#EC208C;color:#fff;font-weight:700}
+.ktra-cal .kc-chips button.on small{color:#FFE3F1}
+.ktra-cal .kc-wk,.ktra-cal .kc-dg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.ktra-cal .kc-wk div{font-size:11px;color:#8B87A3;text-align:center;padding:4px 0}
+.ktra-cal .kc-dc{min-height:52px;border:1px solid #ECE7F6;border-radius:8px;padding:4px 2px;text-align:center;font-size:12px;cursor:pointer;background:#fff}
+.ktra-cal .kc-dc.em{border:none;background:none;cursor:default}
+.ktra-cal .kc-dc.sel{border-color:#EC208C;background:#FDE7F3}
+.ktra-cal .kc-dc.today span.n{font-weight:700;color:#EC208C}
+.ktra-cal .kc-dt{display:flex;gap:2px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.ktra-cal .kc-d{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--c)}
+.ktra-cal .kc-s-open{--c:#1B8A5A;--b:#E3F5EC}
+.ktra-cal .kc-s-soon{--c:#3B3FA0;--b:#E8E8FA}
+.ktra-cal .kc-s-closed{--c:#8B87A3;--b:#F0EEF6}
+.ktra-cal .kc-s-unk{--c:#B26A00;--b:#FFF1D6}
+.ktra-cal .kc-bd{font-size:11px;padding:2px 8px;border-radius:6px;background:var(--b);color:var(--c);white-space:nowrap;font-weight:700}
+.ktra-cal .kc-lg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:#6B668A;margin:12px 0}
+.ktra-cal .kc-lg span{display:inline-flex;align-items:center;gap:5px}
+.ktra-cal .kc-mh{font-size:16px;font-weight:700;color:#2B2A6B;margin:16px 0 4px}
+.ktra-cal .kc-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid #ECE7F6}
+.ktra-cal .kc-dd{width:78px;flex:none;font-size:12px;color:#6B668A;line-height:1.5}
+.ktra-cal .kc-mn{flex:1;min-width:0}
+.ktra-cal .kc-nm{font-size:14px;font-weight:700;line-height:1.4;word-break:keep-all}
+.ktra-cal .kc-nt{font-size:12px;color:#6B668A;line-height:1.5}
+.ktra-cal .kc-ft{font-size:12px;color:#8B87A3;margin:14px 0 0;line-height:1.6}
+</style>
+<div class="kc-hd"><i class="kc-tri"></i>KTRA 해외 트레일 대회 일정</div>
+<p class="kc-sub">2026.11 ~ 2027.10 · 접수 상태 기준일 2026.11.16</p>
+<div class="kc-row2 kc-tabs"><button class="kc-btn on" id="kc-vm">월 달력</button><button class="kc-btn" id="kc-vy">연간 일정</button></div>
+<div id="kc-cw">
+<div class="kc-chips" id="kc-chips"></div>
+<div class="kc-wk"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
+<div class="kc-dg" id="kc-dg"></div>
+</div>
+<div class="kc-lg" id="kc-lg">
+<span class="kc-s-open"><i class="kc-d"></i>접수 중</span>
+<span class="kc-s-soon"><i class="kc-d"></i>접수 예정</span>
+<span class="kc-s-closed"><i class="kc-d"></i>마감</span>
+<span class="kc-s-unk"><i class="kc-d"></i>미확인</span>
+</div>
+<div id="kc-ls"></div>
+<p class="kc-ft" id="kc-ft"></p>
+<script>
+(function(){
+var E=[
+{n:1,name:'UTMB 몽블랑',c:'프랑스',s:null,m:[2027,8],ap:'8월 말(미확정)',st:'soon',nt:'2027 접수 조건 미공개, 1월 추첨 예상'},
+{n:2,name:'라바레도 울트라 트레일',c:'이탈리아',s:[2027,6,23],e:[2027,6,27],st:'closed',nt:'추첨 종료, 2028년판 대비'},
+{n:3,name:'발 다란 by UTMB',c:'스페인',s:[2027,7,7],e:[2027,7,11],st:'open',nt:'선착순 접수 중'},
+{n:4,name:'추크슈피츠 울트라트레일',c:'독일',s:[2027,6,17],e:[2027,6,20],st:'unk',nt:'일부 종목 매진, 추첨제 전환'},
+{n:5,name:'웨스턴 스테이츠 100',c:'미국',s:[2027,6,26],e:[2027,6,27],st:'open',nt:'추첨 신청 ~11.21, 추첨 12.5'},
+{n:6,name:'하드록 100',c:'미국',s:[2027,7,9],e:[2027,7,11],st:'closed',nt:'추첨 신청 마감, 추첨 12.5'},
+{n:7,name:'토르 데 제앙',c:'이탈리아',s:[2027,9,12],e:[2027,9,18],st:'soon',nt:'사전등록 2027.2.1~14'},
+{n:8,name:'디아고날 데 푸',c:'레위니옹',s:null,m:[2027,10],ap:'10월 중순(미확정)',st:'soon',nt:'외국인 선착순, 접수는 1월 예상(미확인)'},
+{n:9,name:'트랜스그란카나리아',c:'스페인',s:[2027,2,22],e:[2027,2,28],st:'closed',nt:'Classic 등 일부 종목 매진'},
+{n:10,name:'치앙마이 by UTMB',c:'태국',s:[2026,11,27],e:[2026,12,6],st:'closed',nt:'2026판 접수 마감, 개최 임박'},
+{n:11,name:'베트남 하이랜드 트레일',c:'베트남',s:[2027,1,8],e:[2027,1,10],st:'closed',nt:'주요 종목 마감 표시'},
+{n:12,name:'Mt.FUJI100',c:'일본',s:[2027,4,23],e:[2027,4,25],st:'closed',nt:'추첨 접수 11.15 마감, 당첨 발표 12.1'},
+{n:13,name:'가가 스파 트레일 100',c:'일본',s:[2027,6,17],e:[2027,6,20],st:'open',nt:'선착순 ~2027.3.31'},
+{n:14,name:'홍콩 100 (HK100)',c:'홍콩',s:[2027,1,21],e:[2027,1,24],st:'closed',nt:'추첨 종료'},
+{n:15,name:'엑스트레일 컨딩',c:'대만',s:[2027,3,5],e:[2027,3,7],st:'unk',nt:'접수 7.13 오픈, 잔여 미확인'},
+{n:16,name:'울트라트레일 모간',c:'중국',s:[2027,4,16],e:[2027,4,18],st:'unk',nt:'2027 접수 미오픈(2차 자료)'},
+{n:17,name:'샹그릴라 트레일런',c:'중국',s:null,m:[2027,6],ap:'6월 18~20 추정',st:'unk',nt:'공식 미확인'},
+{n:17,name:'시솽반나 멍하이 트레일',c:'중국',s:[2027,1,2],e:[2027,1,3],st:'unk',nt:'2차 자료, 공식 미확인'},
+{n:18,name:'웨이하이 100 슈퍼 트레일',c:'중국',s:[2027,4,23],e:[2027,4,25],st:'unk',nt:'일정 예정(拟), 참가비·접수 일정 미확인'}
+];
+var ML={open:'접수 중',soon:'접수 예정',closed:'마감',unk:'미확인'};
+var MS=[[2026,11],[2026,12],[2027,1],[2027,2],[2027,3],[2027,4],[2027,5],[2027,6],[2027,7],[2027,8],[2027,9],[2027,10]];
+var now=new Date(),TY=now.getFullYear(),TM=now.getMonth()+1,TD=now.getDate();
+var cur=0;MS.forEach(function(x,i){if(x[0]===TY&&x[1]===TM)cur=i});
+var selDay=null,view='m';
+function $(i){return document.getElementById('kc-'+i)}
+function T(a){return new Date(a[0],a[1]-1,a[2]).getTime()}
+function vis(ev){return true}
+function inMonth(ev,y,m){if(ev.s){return T(ev.s)<=new Date(y,m,0).getTime()&&T(ev.e)>=new Date(y,m-1,1).getTime()}return ev.m[0]===y&&ev.m[1]===m}
+function onDay(ev,y,m,d){if(!ev.s)return false;var t=new Date(y,m-1,d).getTime();return t>=T(ev.s)&&t<=T(ev.e)}
+function evs(y,m){return E.filter(function(ev){return vis(ev)&&inMonth(ev,y,m)}).sort(function(a,b){return (a.s?T(a.s):9e15)-(b.s?T(b.s):9e15)})}
+function dtxt(ev){if(!ev.s)return ev.ap;return ev.s[1]+'.'+ev.s[2]+' ~ '+ev.e[1]+'.'+ev.e[2]}
+function rowH(ev){return '<div class="kc-item kc-s-'+ev.st+'"><div class="kc-dd">'+dtxt(ev)+'</div><div class="kc-mn"><div class="kc-nm">'+ev.name+'</div><div class="kc-nt">'+ev.c+' · '+ev.nt+'</div></div><div><span class="kc-bd">'+ML[ev.st]+'</span></div></div>'}
+function chips(){
+ var h='';
+ MS.forEach(function(x,i){h+='<button data-i="'+i+'" class="'+(i===cur?'on':'')+'">'+String(x[0]).slice(2)+'.'+x[1]+'<small>'+evs(x[0],x[1]).length+'개</small></button>'});
+ $('chips').innerHTML=h;
+ Array.prototype.forEach.call($('chips').querySelectorAll('button'),function(b){b.onclick=function(){cur=+b.getAttribute('data-i');selDay=null;render()}})}
+function cal(){
+ var y=MS[cur][0],m=MS[cur][1],first=new Date(y,m-1,1).getDay(),days=new Date(y,m,0).getDate(),h='';
+ for(var i=0;i<first;i++)h+='<div class="kc-dc em"></div>';
+ for(var d=1;d<=days;d++){
+  var es=E.filter(function(ev){return vis(ev)&&onDay(ev,y,m,d)});
+  var dots=es.slice(0,3).map(function(ev){return '<i class="kc-d kc-s-'+ev.st+'"></i>'}).join('');
+  var td=(y===TY&&m===TM&&d===TD);
+  h+='<div class="kc-dc'+(selDay===d?' sel':'')+(td?' today':'')+'" data-d="'+d+'"><span class="n">'+d+'</span><div class="kc-dt">'+dots+(es.length>3?'<span style="font-size:11px;color:#8B87A3">+'+(es.length-3)+'</span>':'')+'</div></div>'}
+ var g=$('dg');g.innerHTML=h;
+ Array.prototype.forEach.call(g.querySelectorAll('.kc-dc:not(.em)'),function(c){c.onclick=function(){var d=+c.getAttribute('data-d');selDay=(selDay===d)?null:d;render()}})}
+function listM(){
+ var y=MS[cur][0],m=MS[cur][1],es=evs(y,m),h='<div class="kc-mh">'+y+'년 '+m+'월'+(selDay?' '+selDay+'일':'')+'</div>';
+ if(selDay){es=es.filter(function(ev){return onDay(ev,y,m,selDay)})}
+ if(!es.length){h+='<div style="padding:10px 0;color:#6B668A;font-size:13px">'+(selDay?'이 날짜에 열리는 대회가 없습니다. 날짜를 다시 누르면 월 전체가 보입니다.':'이 달에 표시할 대회가 없습니다.')+'</div>'}
+ else{h+=es.map(rowH).join('')}
+ $('ls').innerHTML=h}
+function listY(){
+ var h='';
+ MS.forEach(function(x){var es=evs(x[0],x[1]);h+='<div class="kc-mh">'+x[0]+'년 '+x[1]+'월 · '+es.length+'개</div>';h+=es.length?es.map(rowH).join(''):'<div style="padding:8px 0;border-top:1px solid #ECE7F6;font-size:13px;color:#8B87A3">표시할 대회 없음</div>'});
+ $('ls').innerHTML=h}
+function render(){
+ ['m','y'].forEach(function(k){$('v'+k).className='kc-btn'+(view===k?' on':'')});
+ $('cw').style.display=view==='m'?'block':'none';
+ $('ft').textContent='접수 상태는 2026.11.16 기준입니다. 미확정·미확인 항목은 각 대회 공식 사이트에서 다시 확인하세요.';
+ if(view==='m'){chips();cal();listM()}else{listY()}}
+$('vm').onclick=function(){view='m';render()};
+$('vy').onclick=function(){view='y';render()};
+render();
+})();
+</script>
+</div>
